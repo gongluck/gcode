@@ -21,9 +21,15 @@
     <ClCompile Include="..\config\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\code conversion\convert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\config\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code conversion\convert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

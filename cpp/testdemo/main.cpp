@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "../config/config.h"
+#include "../code conversion/convert.h"
 
 #define CHECKRET(ret)\
 if(ret != 0)\
@@ -27,5 +28,15 @@ int main()
     std::vector<std::pair<std::string, std::string>>kvs;
     ret = conf.readall("log", kvs);
     CHECKRET(ret);
+
+    std::string ansi = "ÄãºÃ£¬ÊÀ½ç£¡";
+    std::wstring uni;
+    std::string utf8;
+    ret = gconvert::ansi2uni(ansi, uni);
+    ret = gconvert::ansi2utf8(ansi, utf8);
+    ret = gconvert::uni2ansi(uni, ansi);
+    ret = gconvert::uni2utf8(uni, utf8);
+    ret = gconvert::utf82ansi(utf8, ansi);
+    ret = gconvert::utf82uni(utf8, uni);
     return 0;
 }
