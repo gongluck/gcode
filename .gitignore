@@ -1,0 +1,11 @@
+.vscode
+.vs
+Debug
+
+*.exe
+*.obj
+*.log
+*.tlog
+*.pdb
+*.idb
+*.user
