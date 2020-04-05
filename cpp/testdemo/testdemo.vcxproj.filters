@@ -24,12 +24,18 @@
     <ClCompile Include="..\code conversion\convert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\process\process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\config\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\code conversion\convert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\process\process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

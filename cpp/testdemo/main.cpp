@@ -9,6 +9,7 @@
 
 #include "../config/config.h"
 #include "../code conversion/convert.h"
+#include "../process/process.h"
 
 #define CHECKRET(ret)\
 if(ret != 0)\
@@ -38,5 +39,7 @@ int main()
     ret = gconvert::uni2utf8(uni, utf8);
     ret = gconvert::utf82ansi(utf8, ansi);
     ret = gconvert::utf82uni(utf8, uni);
+
+    auto handle = gprocess::gethandle("testdemo.exe");
     return 0;
 }
