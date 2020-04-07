@@ -13,6 +13,8 @@
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 
+#include "../errcode.h"
+
 namespace gconf
 {
 class config
@@ -24,7 +26,7 @@ public:
     {
         if (configfile != nullptr && open(configfile) != 0)
         {
-            return -1;
+            return G_ERROR_INVALIDPARAM;
         }
 
         try
@@ -35,10 +37,10 @@ public:
         catch (std::exception &e)
         {
             std::cerr << __FILE__ << " : " << __LINE__ << " : " << e.what() << std::endl;
-            return -1;
+            return G_ERROR_INVALIDPARAM;
         }
 
-        return 0;
+        return G_ERROR_SUCCEED;
     }
     int readall(const char *session,
                 std::vector<std::pair<std::string, std::string>> &results,

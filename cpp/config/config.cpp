@@ -14,7 +14,7 @@ int config::open(const char *configfile)
 {
     if (configfile == nullptr)
     {
-        return -1;
+        return G_ERROR_INVALIDPARAM;
     }
 
     try
@@ -24,10 +24,10 @@ int config::open(const char *configfile)
     catch (std::exception &e)
     {
         std::cerr << __FILE__ << " : " << __LINE__ << " : " << e.what() << std::endl;
-        return -1;
+        return G_ERROR_INVALIDPARAM;
     }
 
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 
 int config::readall(const char *session,
@@ -38,7 +38,7 @@ int config::readall(const char *session,
     {
         std::cerr << __FILE__ << " : " << __LINE__ << " : "
                   << " can not open " << configfile << std::endl;
-        return -1;
+        return G_ERROR_INVALIDPARAM;
     }
 
     try
@@ -52,9 +52,9 @@ int config::readall(const char *session,
     catch (std::exception &e)
     {
         std::cerr << __FILE__ << " : " << __LINE__ << " : " << e.what() << std::endl;
-        return -1;
+        return G_ERROR_INVALIDPARAM;
     }
 
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 } // namespace gconf

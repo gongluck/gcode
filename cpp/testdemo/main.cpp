@@ -1,6 +1,6 @@
 /*
- * @Author: gongluck 
- * @Date: 2020-03-23 15:57:21 
+ * @Author: gongluck
+ * @Date: 2020-03-23 15:57:21
  * @Last Modified by: gongluck
  * @Last Modified time: 2020-03-23 15:58:01
  */
@@ -40,6 +40,12 @@ int main()
     ret = gconvert::utf82ansi(utf8, ansi);
     ret = gconvert::utf82uni(utf8, uni);
 
-    auto handle = gprocess::gethandle("testdemo.exe");
+    std::vector<gprocess::ProcessInfo> infos;
+    ret = gprocess::gethandle("testdemo.exe", infos);
+
+    gprocess::WindowInfo info;
+    info.processid = 15972;
+    ret = gprocess::getallwindows(&info);
+
     return 0;
 }

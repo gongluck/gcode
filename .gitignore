@@ -4,8 +4,10 @@ Debug
 
 *.exe
 *.obj
+*.iobj
 *.log
 *.tlog
 *.pdb
+*.ipdb
 *.idb
 *.user

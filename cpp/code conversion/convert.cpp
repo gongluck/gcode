@@ -6,6 +6,7 @@
  */
 
 #include "convert.h"
+#include "../errcode.h"
 
 #include <iostream>
 
@@ -22,13 +23,13 @@ namespace gconvert
         if (len <= 0)
         {
             std::cerr << __FILE__ << " : " << __LINE__ << " : " << GetLastError() << std::endl;
-            return -1;
+            return G_ERROR_INVALIDPARAM;
         }
         WCHAR* buf = new WCHAR[len];
         if (buf == nullptr)
         {
             std::cerr << __FILE__ << " : " << __LINE__ << " : " << "can not new buf, size : " << len << std::endl;
-            return -2;
+            return G_ERROR_NOBUF;
         }
         len = MultiByteToWideChar(code, 0, multi.c_str(), -1, buf, len);
         uni.assign(buf);
@@ -43,13 +44,13 @@ namespace gconvert
         if (len <= 0)
         {
             std::cerr << __FILE__ << " : " << __LINE__ << " : " << GetLastError() << std::endl;
-            return -1;
+            return G_ERROR_INVALIDPARAM;
         }
         CHAR* buf = new CHAR[len];
         if (buf == nullptr)
         {
             std::cerr << __FILE__ << " : " << __LINE__ << " : " << "can not new buf, size : " << len << std::endl;
-            return -2;
+            return G_ERROR_NOBUF;
         }
         len = WideCharToMultiByte(code, 0, uni.c_str(), -1, buf, len, nullptr, nullptr);
         multi.assign(buf);
@@ -65,7 +66,7 @@ int ansi2uni(const std::string& ansi, std::wstring& uni)
 #ifdef _WIN32
     return multi2uni(ansi, uni, CP_ACP);
 #endif
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 
 // Unicode->ANSI
@@ -74,7 +75,7 @@ int uni2ansi(const std::wstring &uni, std::string &ansi)
 #ifdef _WIN32
     return uni2multi(uni, ansi, CP_ACP);
 #endif
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 
 // UTF8->Unicode
@@ -83,7 +84,7 @@ int utf82uni(const std::string& utf8, std::wstring& uni)
 #ifdef _WIN32
     return multi2uni(utf8, uni, CP_UTF8);
 #endif
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 
 // Unicode->UTF8
@@ -92,7 +93,7 @@ int uni2utf8(const std::wstring& uni, std::string& utf8)
 #ifdef _WIN32
     return uni2multi(uni, utf8, CP_UTF8);
 #endif
-    return 0;
+    return G_ERROR_SUCCEED;
 }
 
 // ANSI->UTF8
@@ -102,7 +103,7 @@ int ansi2utf8(const std::string &ansi, std::string &utf8)
     auto len = ansi2uni(ansi, uni);
     if (len <= 0)
     {
-        return -3;
+        return G_ERROR_INTERNAL;
     }
     return uni2utf8(uni, utf8);
 }
@@ -114,7 +115,7 @@ int utf82ansi(const std::string &utf8, std::string &ansi)
     auto len = utf82uni(utf8, uni);
     if (len <= 0)
     {
-        return -3;
+        return G_ERROR_INTERNAL;
     }
     return uni2ansi(uni, ansi);
 }

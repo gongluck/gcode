@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="..\code conversion\convert.h" />
     <ClInclude Include="..\config\config.h" />
+    <ClInclude Include="..\errcode.h" />
     <ClInclude Include="..\process\process.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

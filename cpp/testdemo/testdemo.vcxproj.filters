@@ -38,5 +38,8 @@
     <ClInclude Include="..\process\process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\errcode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

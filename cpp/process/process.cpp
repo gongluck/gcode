@@ -1,11 +1,12 @@
 /*
- * @Author: gongluck 
- * @Date: 2020-04-05 21:40:35 
+ * @Author: gongluck
+ * @Date: 2020-04-05 21:40:35
  * @Last Modified by: gongluck
  * @Last Modified time: 2020-04-05 21:43:38
  */
 
 #include "process.h"
+#include "../errcode.h"
 
 #include <iostream>
 
@@ -18,37 +19,83 @@
 
 namespace gprocess
 {
-void* gethandle(const char* processname)
-{
-    if (processname == nullptr)
+    int gethandle(const char* processname, std::vector<ProcessInfo>& result)
     {
-        return nullptr;
+        if (processname == nullptr)
+        {
+            return G_ERROR_INVALIDPARAM;
+        }
+
+#ifdef _WIN32
+        auto hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+        USES_CONVERSION;
+        auto processT = A2T(processname);
+        if (hSnapshot == INVALID_HANDLE_VALUE || processT == nullptr)
+        {
+            std::cerr << __FILE__ << " : " << __LINE__ << " : " << GetLastError() << std::endl;
+            return G_ERROR_INTERNAL;
+        }
+
+        result.clear();
+        ProcessInfo info = { 0 };
+        PROCESSENTRY32 pe = { sizeof(pe) };
+        auto fOk = FALSE;
+        for (fOk = Process32First(hSnapshot, &pe); fOk; fOk = Process32Next(hSnapshot, &pe))
+        {
+            if (!_tcscmp(pe.szExeFile, processT))
+            {
+                info.processid = pe.th32ProcessID;
+                info.parentid = pe.th32ParentProcessID;
+                result.push_back(info);
+            }
+        }
+        CloseHandle(hSnapshot);
+        return G_ERROR_SUCCEED;
+#endif
+
+        return G_ERROR_SUCCEED;
     }
 
 #ifdef _WIN32
-    auto hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (hSnapshot == INVALID_HANDLE_VALUE)
+    BOOL CALLBACK EnumChildWindowCB(HWND h, LPARAM l)
     {
-        std::cerr << __FILE__ << " : " << __LINE__ << " : " << GetLastError() << std::endl;
-        return nullptr;
-    }
-    PROCESSENTRY32 pe = { sizeof(pe) };
-    USES_CONVERSION; 
-    auto processT = A2T(processname);
-
-    auto fOk = FALSE;
-    for (fOk = Process32First(hSnapshot, &pe); fOk; fOk = Process32Next(hSnapshot, &pe))
-    {
-        if (!_tcscmp(pe.szExeFile, processT))
+        auto pinfos = reinterpret_cast<WindowInfo*>(l);
+        DWORD pid = 0;
+        GetWindowThreadProcessId(h, &pid);
+        if (pid == pinfos->processid)
         {
-            CloseHandle(hSnapshot);
-            return OpenProcess(PROCESS_ALL_ACCESS, FALSE, pe.th32ProcessID);
+            auto pinfo = std::make_shared<WindowInfo>();
+            pinfo->processid = pinfos->processid;
+            pinfo->windows.push_back(h);
+            pinfos->childs.push_back(pinfo);
+            EnumChildWindows(h, EnumChildWindowCB, reinterpret_cast<LPARAM>(pinfo.get()));
         }
+        return TRUE;
     }
-    CloseHandle(hSnapshot);
-    return nullptr;
+    BOOL CALLBACK  EnumWindowCB(HWND h, LPARAM l)
+    {
+        auto pinfos = reinterpret_cast<WindowInfo*>(l);
+        DWORD pid = 0;
+        GetWindowThreadProcessId(h, &pid);
+        if (pid == pinfos->processid)
+        {
+            EnumChildWindows(h, EnumChildWindowCB, l);
+            pinfos->windows.push_back(h);
+        }
+        return TRUE;
+    }
 #endif
 
-    return 0;
-}
+    int getallwindows(WindowInfo* info)
+    {
+#ifdef _WIN32
+        if (EnumWindows(EnumWindowCB, reinterpret_cast<LPARAM>(info)) != TRUE)
+        {
+            std::cerr << __FILE__ << " : " << __LINE__ << " : " << GetLastError() << std::endl;
+            return G_ERROR_INTERNAL;
+        }
+        return G_ERROR_SUCCEED;
+#endif
+        return G_ERROR_SUCCEED;
+    }
 } // namespace gprocess
