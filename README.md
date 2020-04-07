@@ -6,3 +6,5 @@ Some code snippets that can be reused
     Profile read, dependent on boost
 ### code conversion
 	String encoding conversion
+### process
+    Process and window management
