@@ -20,7 +20,7 @@ namespace gprocess
     typedef struct __WINDOWINFO
     {
         uint64_t processid = 0;
-        std::vector<void*> windows;
+        void* window = nullptr;
         std::vector<std::shared_ptr<__WINDOWINFO>> childs;
     }WindowInfo;
 

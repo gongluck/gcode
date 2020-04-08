@@ -59,28 +59,31 @@ namespace gprocess
 #ifdef _WIN32
     BOOL CALLBACK EnumChildWindowCB(HWND h, LPARAM l)
     {
-        auto pinfos = reinterpret_cast<WindowInfo*>(l);
+        auto pinfo = reinterpret_cast<WindowInfo*>(l);
         DWORD pid = 0;
         GetWindowThreadProcessId(h, &pid);
-        if (pid == pinfos->processid)
+        if (pid == pinfo->processid)
         {
-            auto pinfo = std::make_shared<WindowInfo>();
-            pinfo->processid = pinfos->processid;
-            pinfo->windows.push_back(h);
-            pinfos->childs.push_back(pinfo);
-            EnumChildWindows(h, EnumChildWindowCB, reinterpret_cast<LPARAM>(pinfo.get()));
+            auto pchild = std::make_shared<WindowInfo>();
+            pchild->processid = pid;
+            pchild->window = h;
+            pinfo->childs.push_back(pchild);
+            EnumChildWindows(h, EnumChildWindowCB, reinterpret_cast<LPARAM>(pchild.get()));
         }
         return TRUE;
     }
-    BOOL CALLBACK  EnumWindowCB(HWND h, LPARAM l)
+    BOOL CALLBACK EnumWindowCB(HWND h, LPARAM l)
     {
-        auto pinfos = reinterpret_cast<WindowInfo*>(l);
+        auto pinfo = reinterpret_cast<WindowInfo*>(l);
         DWORD pid = 0;
         GetWindowThreadProcessId(h, &pid);
-        if (pid == pinfos->processid)
+        if (pid == pinfo->processid)
         {
-            EnumChildWindows(h, EnumChildWindowCB, l);
-            pinfos->windows.push_back(h);
+            auto pchild = std::make_shared<WindowInfo>();
+            pchild->processid = pid;
+            pchild->window = h;
+            pinfo->childs.push_back(pchild);
+            EnumChildWindows(h, EnumChildWindowCB, reinterpret_cast<LPARAM>(pchild.get()));
         }
         return TRUE;
     }

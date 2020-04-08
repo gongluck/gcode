@@ -41,10 +41,10 @@ int main()
     ret = gconvert::utf82uni(utf8, uni);
 
     std::vector<gprocess::ProcessInfo> infos;
-    ret = gprocess::gethandle("testdemo.exe", infos);
+    ret = gprocess::gethandle("Taskmgr.exe", infos);
 
     gprocess::WindowInfo info;
-    info.processid = 15972;
+    info.processid = infos[0].processid;
     ret = gprocess::getallwindows(&info);
 
     return 0;
