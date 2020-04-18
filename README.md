@@ -8,3 +8,5 @@ Some code snippets that can be reused
 	String encoding conversion
 ### process
     Process and window management
+### crypto
+	Encryption and decryption

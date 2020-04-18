@@ -10,6 +10,8 @@
 #include "../config/config.h"
 #include "../code conversion/convert.h"
 #include "../process/process.h"
+#include "../crypto/padding.h"
+#include "../crypto/base64.h"
 
 #define CHECKRET(ret)\
 if(ret != 0)\
@@ -20,7 +22,7 @@ if(ret != 0)\
 
 int main()
 {
-    gconf::config conf;
+    /*gconf::config conf;
     auto ret = conf.open("./config.ini");
     CHECKRET(ret);
     int file = 0;
@@ -28,9 +30,9 @@ int main()
     CHECKRET(ret);
     std::vector<std::pair<std::string, std::string>>kvs;
     ret = conf.readall("log", kvs);
-    CHECKRET(ret);
+    CHECKRET(ret);*/
 
-    std::string ansi = "你好，世界！";
+    /*std::string ansi = "你好，世界！";
     std::wstring uni;
     std::string utf8;
     ret = gconvert::ansi2uni(ansi, uni);
@@ -38,14 +40,20 @@ int main()
     ret = gconvert::uni2ansi(uni, ansi);
     ret = gconvert::uni2utf8(uni, utf8);
     ret = gconvert::utf82ansi(utf8, ansi);
-    ret = gconvert::utf82uni(utf8, uni);
+    ret = gconvert::utf82uni(utf8, uni);*/
 
-    std::vector<gprocess::ProcessInfo> infos;
+    /*std::vector<gprocess::ProcessInfo> infos;
     ret = gprocess::gethandle("Taskmgr.exe", infos);
 
     gprocess::WindowInfo info;
     info.processid = infos[0].processid;
-    ret = gprocess::getallwindows(&info);
+    ret = gprocess::getallwindows(&info);*/
+
+    std::string plain = "hello,gcrypto.";
+    plain = gcrypto::PKCS5Padding(plain, 8);
+    auto cipher = gcrypto::Base64Encode(plain);
+    plain = gcrypto::Base64Decode(cipher);
+    plain = gcrypto::UNPKCS5Padding(plain, 8);
 
     return 0;
 }
