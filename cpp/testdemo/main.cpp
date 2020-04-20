@@ -12,6 +12,7 @@
 #include "../process/process.h"
 #include "../crypto/padding.h"
 #include "../crypto/base64.h"
+#include "../crypto/des.h"
 
 #define CHECKRET(ret)\
 if(ret != 0)\
@@ -51,7 +52,9 @@ int main()
 
     std::string plain = "hello,gcrypto.";
     plain = gcrypto::PKCS5Padding(plain, 8);
-    auto cipher = gcrypto::Base64Encode(plain);
+    auto cipher = gcrypto::DesEcbEncode(plain, "12345678");
+    cipher = gcrypto::Base64Encode(plain);
+    plain = gcrypto::DesEcbDecode(cipher, "12345678");
     plain = gcrypto::Base64Decode(cipher);
     plain = gcrypto::UNPKCS5Padding(plain, 8);
 

@@ -9,4 +9,4 @@ Some code snippets that can be reused
 ### process
     Process and window management
 ### crypto
-	Encryption and decryption
+	Encryption and decryption, some algorithms rely on openssl
