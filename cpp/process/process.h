@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace gprocess
 {
@@ -27,4 +28,6 @@ namespace gprocess
     int gethandle(const char* processname, std::vector<ProcessInfo>&result);
 
     int getallwindows(WindowInfo* info);
+
+    int injectdll(const std::wstring& dllname, uint64_t processid, uint64_t* hthread);
 } // namespace gprocess
