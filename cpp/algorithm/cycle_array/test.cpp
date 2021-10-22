@@ -2,7 +2,7 @@
  * @Author: gongluck
  * @Date: 2021-10-22 14:20:06
  * @Last Modified by: gongluck
- * @Last Modified time: 2021-10-22 14:50:09
+ * @Last Modified time: 2021-10-22 17:21:38
  */
 
 #include <iostream>
@@ -13,31 +13,41 @@ class A
 public:
     A()
     {
-        std::cout << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
     }
     A(const A&)
     {
-        std::cout << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
     }
     A(A&&)
     {
-        std::cout << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
     }
     A& operator=(const A&)
     {
-        std::cout << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
+        return *this;
+    }
+    A& operator=(A&&)
+    {
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
         return *this;
     }
     ~A()
     {
-        std::cout << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << __LINE__ << std::endl;
     }
 };
 
+galgorithm::cycle_array<int, 20> cycle;
+galgorithm::cycle_array<A, 10> cycleA;
+A a{};
+A b[10];
+
 int main()
 {
-    galgorithm::cycle_array<int, 20> cycle;
-    for (int i = 0; i < cycle.size(); ++i)
+    std::cout << "begin" << std::endl;
+    for (int i = 0; i < cycle.capticty(); ++i)
     {
         cycle.push(i);
     }
@@ -47,7 +57,7 @@ int main()
     }
     std::cout << std::endl;
 
-    for (int i = 0; i < cycle.size() / 2; ++i)
+    for (int i = 0; i < cycle.capticty() / 2; ++i)
     {
         int tmp;
         cycle.pop(tmp);
@@ -59,7 +69,7 @@ int main()
     }
     std::cout << std::endl;
 
-    for (int i = 0; i < cycle.size() /2 ; ++i)
+    for (int i = 0; i < cycle.capticty() /2 ; ++i)
     {
         cycle.push(i + 100);
     }
@@ -84,20 +94,19 @@ int main()
     }
     std::cout << std::endl;
 
-    galgorithm::cycle_array<A, 3> cycleA;
-    std::cout << "init" << std::endl;
-    A a{};
-    for (int i = 0; i < cycleA.size(); ++i)
-    {
-        cycleA.push(a);
-        std::cout << "push" << std::endl;
-    }
+    cycleA.push(A{});
+    std::cout << "push" << std::endl;
 
-    for (int i = 0; i < cycleA.size(); ++i)
-    {
-        cycleA.pop(a);
-        std::cout << "pop" << std::endl;
-    }
+    cycleA.pop(a);
+    std::cout << "pop" << std::endl;
 
+    std::cout << "*********************" << std::endl;
+    
+    cycleA.push(b, 10);
+    std::cout << "push" << std::endl;
+    cycleA.pop(b, 10);
+    std::cout << "pop" << std::endl;
+
+    std::cout << "end" << std::endl;
     return 0;
 }

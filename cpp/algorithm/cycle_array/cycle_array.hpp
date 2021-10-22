@@ -2,7 +2,7 @@
  * @Author: gongluck
  * @Date: 2021-10-22 14:19:12
  * @Last Modified by: gongluck
- * @Last Modified time: 2021-10-22 14:50:12
+ * @Last Modified time: 2021-10-22 17:22:56
  */
 
 #ifndef __CYCLE_ARRAY__HPP__
@@ -87,6 +87,11 @@ namespace galgorithm
             return len_;
         }
 
+        size_t capticty()
+        {
+            return size_;
+        }
+
         bool push(const T &v)
         {
             if (len_ >= size_)
@@ -100,6 +105,20 @@ namespace galgorithm
             }
         }
 
+        bool push(T&& v)
+        {
+            if (len_ >= size_)
+            {
+                return false;
+            }
+            else
+            {
+                base::operator[]((first_ + len_++) % size_) = std::move(v);
+                return true;
+            }
+        }
+
+        // 数组拷贝能够使用移动语义？
         bool push(const T *vl, size_t len)
         {
             if (len + len_ > size_)
@@ -108,7 +127,7 @@ namespace galgorithm
             }
             else
             {
-                std::copy(vl, vl + len, end());
+                std::copy_n(vl, len, end());
                 len_ += len;
                 return true;
             }
@@ -122,7 +141,7 @@ namespace galgorithm
             }
             else
             {
-                v = base::operator[]((first_++) % size_);
+                v = std::move(base::operator[]((first_++) % size_));
                 first_ %= size_;
                 --len_;
                 return true;
@@ -131,7 +150,7 @@ namespace galgorithm
 
         bool pop(T *vl, size_t len)
         {
-            if (len > size_)
+            if (len > len_)
             {
                 return false;
             }
